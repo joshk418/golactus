@@ -48,10 +48,12 @@ func NewServer(opts ...Option) *Server {
 	return s
 }
 
-func (s *Server) AddRoutes(reqs ...Request) {
+func (s *Server) AddRoutes(reqs ...Request) *Server {
 	for _, r := range reqs {
 		s.router.HandleFunc(r.url, handleFunc(r.handler)).Methods(r.action)
 	}
+
+	return s
 }
 
 func (s *Server) Serve() error {
