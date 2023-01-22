@@ -10,11 +10,21 @@ type ResponseError struct {
 	Message    string `json:"message"`
 }
 
-func NewError(code int, err error) *ResponseError {
-	return &ResponseError{
-		StatusCode: code,
-		Message:    err.Error(),
+func NewError(opts ...interface{}) *ResponseError {
+	re := &ResponseError{}
+
+	for _, o := range opts {
+		switch option := o.(type) {
+		case int:
+			re.StatusCode = option
+		case string:
+			re.Message = option
+		case error:
+			re.Message = option.Error()
+		}
 	}
+
+	return re
 }
 
 func (e *ResponseError) Error() string {
