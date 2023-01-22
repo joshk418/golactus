@@ -19,3 +19,9 @@ func Port(port string) Option {
 		s.port = port
 	}
 }
+
+func RequestTimeout(requestTimeout int) Option {
+	return func(s *Server) {
+		s.requestTimeout = requestTimeout
+	}
+}
