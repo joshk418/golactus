@@ -8,15 +8,17 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	log "github.com/sirupsen/logrus"
 )
 
 type Server struct {
-	ln     net.Listener
-	server *http.Server
-	router *mux.Router
-	name   string
-	host   string
-	port   string
+	ln             net.Listener
+	name           string
+	host           string
+	port           string
+	server         *http.Server
+	router         *mux.Router
+	requestTimeout int
 
 	Addr   string
 	Domain string
@@ -88,9 +90,12 @@ func handleFunc(handler CustomHandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		i, err := handler(w, r)
 		if err != nil {
+			log.Println(err)
 			handleError(err, w)
 			return
 		}
+
+		log.Infof("[%s] %s", r.Method, r.RequestURI)
 
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.Header().Set("X-Content-Type-Options", "nosniff")
