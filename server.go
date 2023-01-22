@@ -48,6 +48,14 @@ func NewServer(opts ...Option) *Server {
 	return s
 }
 
+type MiddlwareHandler func(h http.Handler) http.Handler
+
+func (s *Server) RegisterMiddleware(middleware ...MiddlwareHandler) {
+	for _, m := range middleware {
+		s.router.Use(mux.MiddlewareFunc(m))
+	}
+}
+
 func (s *Server) AddRoutes(reqs ...Request) *Server {
 	for _, r := range reqs {
 		s.router.HandleFunc(r.url, handleFunc(r.handler)).Methods(r.action)

@@ -26,9 +26,9 @@ func handleError(err error, w http.ResponseWriter) {
 		Message: err.Error(),
 	}
 
-	switch err.(type) {
+	switch e := err.(type) {
 	case *ResponseError:
-		respErr = err.(*ResponseError)
+		respErr = e
 	default:
 		respErr.StatusCode = http.StatusInternalServerError
 	}
