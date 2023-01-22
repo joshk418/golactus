@@ -10,10 +10,10 @@ type ResponseError struct {
 	Message    string `json:"message"`
 }
 
-func NewError(code int, err string) *ResponseError {
+func NewError(code int, err error) *ResponseError {
 	return &ResponseError{
 		StatusCode: code,
-		Message:    err,
+		Message:    err.Error(),
 	}
 }
 
